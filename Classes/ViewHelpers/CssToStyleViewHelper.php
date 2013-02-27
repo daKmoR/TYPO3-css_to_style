@@ -22,31 +22,30 @@ namespace TYPO3\CssToStyle\ViewHelpers;
 require_once(dirname(__FILE__) . '/../../Resources/Private/Php/emogrifier/emogrifier.php');
 
 /**
- * Form view helper. Generates a <form> Tag. http://www.pelagodesign.com/sidecar/emogrifier/
+ * Uses Emogrifier to parse a given css file and set inline style attributes.
+ *
+ * http://www.pelagodesign.com/sidecar/emogrifier/
+ *
  *
  * = Basic usage =
  *
- * Use <f:form> to output an HTML <form> tag which is targeted at the specified action, in the current controller and package.
- * It will submit the form data via a POST request. If you want to change this, use method="get" as an argument.
+ * Wrap the HTML Code you want to have the inline style with the Viewhelper
  * <code title="Example">
- * <f:form action="...">...</f:form>
+ *   <css:cssToStyle cssFile="EXT:your_extension/Resources/Private/Templates/Email/Global.css">
+ *     OR
+ *   <css:cssToStyle cssFile="{templateRootPath}Email/Global.css">
+ *   <body>
+ *     ...
+ *   </body>
+ *   </css:cssToStyle>
  * </code>
  *
- * = A complex form with a specified encoding type =
- *
- * <code title="Form with enctype set">
- * <f:form action=".." controller="..." package="..." enctype="multipart/form-data">...</f:form>
- * </code>
- *
- * = A Form which should render a domain object =
- *
- * <code title="Binding a domain object to a form">
- * <f:form action="..." name="customer" object="{customer}">
- *   <f:form.hidden property="id" />
- *   <f:form.textbox property="name" />
- * </f:form>
- * </code>
- * This automatically inserts the value of {customer.name} inside the textbox and adjusts the name of the textbox accordingly.
+ * <output>
+ *   <body style="background: #fff;">
+ *     ...
+ *   </body>
+ *   // depending on your Css it may set something for body or not
+ * </output>
  *
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
@@ -65,9 +64,6 @@ class CssToStyleViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractView
 		$emogrifier = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Emogrifier');
 		$emogrifier->setCSS(file_get_contents($cssFile));
 		$emogrifier->setHTML($content);
-
-		echo $emogrifier->emogrify();
-		die();
 
 		return $emogrifier->emogrify();
 	}
