@@ -55,15 +55,21 @@ class CssToStyleViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractView
 	 * Parses the given Css-file into inline style attributes
 	 *
 	 * @param string $cssFile css File to use
+	 * @param boolean $debug if set the emogrify output will be echoed and the application exited
 	 * @return string rendered form
 	 */
-	public function render($cssFile) {
+	public function render($cssFile, $debug = FALSE) {
 		$cssFile = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($cssFile);
 		$content = $this->renderChildren();
 
 		$emogrifier = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Emogrifier');
 		$emogrifier->setCSS(file_get_contents($cssFile));
 		$emogrifier->setHTML($content);
+
+		if ($debug === TRUE) {
+			echo $emogrifier->emogrify();
+			die();
+		}
 
 		return $emogrifier->emogrify();
 	}
